@@ -66,7 +66,13 @@ defmodule Packmatic.Source.URL do
       ibrowse: [
         max_sessions: get_max_sessions(),
         ssl_options: [
-          server_name_indication: to_charlist(host)
+          server_name_indication: to_charlist(host),
+          verify: :verify_peer,
+          cacerts: :public_key.cacerts_get(),
+          versions: [:"tlsv1.2"],
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ]
         ]
       ]
     ]
